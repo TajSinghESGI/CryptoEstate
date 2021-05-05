@@ -25,20 +25,16 @@ contract Marketplace {
 
     Estate[] public realEstates;
     
-    mapping (uint => address) public realEstateToOwner;
-    
-    function _createEstate(uint _price, string memory _addr, uint _squareMeter, string memory _description, address _addrSeller, uint _date, uint _nbRoom) external returns (bool) {
-        _addrSeller = msg.sender;
-        realEstates.push(Estate(_price, _addr, _squareMeter, _description, _addrSeller, _date, _nbRoom, false));
+    function _createEstate(uint _price, string memory _addr, uint _squareMeter, string memory _description, uint _date, uint _nbRoom) external returns (bool) {
+        realEstates.push(Estate(_price, _addr, _squareMeter, _description, msg.sender, _date, _nbRoom, false));
         uint id = realEstates.length - 1;
-        // realEstateToOwner[id] = msg.sender;
         emit NewEstate(id, _price, _addr, _squareMeter, _description, _date, _nbRoom);
         return true;
     }
     
-    function _buyRealEstate(uint _idRealEstate, address payable _addrBuyer) payable external{ //msg.value
+    function _buyRealEstate(uint _idRealEstate) payable external{ //msg.value
     
-        require(realEstates[_idRealEstate].addrSeller != _addrBuyer);
+        require(realEstates[_idRealEstate].addrSeller != msg.sender);
         
         require(!realEstates[_idRealEstate].isSold);
         
@@ -46,7 +42,7 @@ contract Marketplace {
         
         realEstates[_idRealEstate].isSold = true;
         
-        _addrBuyer.transfer(msg.value);
+        payable(msg.sender).transfer(msg.value);
 
     }
 

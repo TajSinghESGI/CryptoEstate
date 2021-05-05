@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { BrowserRouter, Switch, Route, Link } from "react-router-dom";
 import "antd/dist/antd.css";
-import {  StaticJsonRpcProvider, JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
+import { StaticJsonRpcProvider, JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import "./App.css";
 import { Row, Col, Button, Menu, Alert, Switch as SwitchD } from "antd";
 import Web3Modal from "web3modal";
@@ -12,7 +12,7 @@ import { Header, Account, Faucet, Ramp, Contract, GasGauge, ThemeSwitch } from "
 import { Transactor } from "./helpers";
 import { formatEther, parseEther } from "@ethersproject/units";
 //import Hints from "./Hints";
-import { Hints, ExampleUI, Subgraph } from "./views"
+import { Hints, ExampleUI, Subgraph, Details } from "./views"
 import { useThemeSwitcher } from "react-css-theme-switcher";
 import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants";
 /*
@@ -43,7 +43,7 @@ const DEBUG = true
 
 
 // 🛰 providers
-if(DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
+if (DEBUG) console.log("📡 Connecting to Mainnet Ethereum");
 // const mainnetProvider = getDefaultProvider("mainnet", { infura: INFURA_ID, etherscan: ETHERSCAN_KEY, quorum: 1 });
 // const mainnetProvider = new InfuraProvider("mainnet",INFURA_ID);
 //
@@ -57,7 +57,7 @@ const mainnetInfura = new StaticJsonRpcProvider("https://mainnet.infura.io/v3/" 
 const localProviderUrl = targetNetwork.rpcUrl;
 // as you deploy to other networks you can set REACT_APP_PROVIDER=https://dai.poa.network in packages/react-app/.env
 const localProviderUrlFromEnv = process.env.REACT_APP_PROVIDER ? process.env.REACT_APP_PROVIDER : localProviderUrl;
-if(DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
+if (DEBUG) console.log("🏠 Connecting to provider:", localProviderUrlFromEnv);
 const localProvider = new StaticJsonRpcProvider(localProviderUrlFromEnv);
 
 
@@ -71,10 +71,10 @@ function App(props) {
 
   const [injectedProvider, setInjectedProvider] = useState();
   /* 💵 This hook will get the price of ETH from 🦄 Uniswap: */
-  const price = useExchangePrice(targetNetwork,mainnetProvider);
+  const price = useExchangePrice(targetNetwork, mainnetProvider);
 
   /* 🔥 This hook will get the price of Gas from ⛽️ EtherGasStation */
-  const gasPrice = useGasPrice(targetNetwork,"fast");
+  const gasPrice = useGasPrice(targetNetwork, "fast");
   // Use your injected provider from 🦊 Metamask or if you don't have it then instantly generate a 🔥 burner wallet.
   const userProvider = useUserProvider(injectedProvider, localProvider);
   const address = useUserAddress(userProvider);
@@ -114,10 +114,10 @@ function App(props) {
   })
 
   // Then read your DAI balance like:
-  const myMainnetDAIBalance = useContractReader({DAI: mainnetDAIContract},"DAI", "balanceOf",["0x34aA3F359A9D614239015126635CE7732c18fDF3"])
+  const myMainnetDAIBalance = useContractReader({ DAI: mainnetDAIContract }, "DAI", "balanceOf", ["0x34aA3F359A9D614239015126635CE7732c18fDF3"])
 
   // keep track of a variable from the contract in the local React state:
-  const purpose = useContractReader(readContracts,"YourContract", "purpose")
+  const purpose = useContractReader(readContracts, "YourContract", "purpose")
 
   //📟 Listen for broadcast events
   const setPurposeEvents = useEventListener(readContracts, "YourContract", "SetPurpose", localProvider, 1);
@@ -130,26 +130,26 @@ function App(props) {
   //
   // 🧫 DEBUG 👨🏻‍🔬
   //
-  useEffect(()=>{
-    if(DEBUG && mainnetProvider && address && selectedChainId && yourLocalBalance && yourMainnetBalance && readContracts && writeContracts && mainnetDAIContract){
+  useEffect(() => {
+    if (DEBUG && mainnetProvider && address && selectedChainId && yourLocalBalance && yourMainnetBalance && readContracts && writeContracts && mainnetDAIContract) {
       console.log("_____________________________________ 🏗 scaffold-eth _____________________________________")
-      console.log("🌎 mainnetProvider",mainnetProvider)
-      console.log("🏠 localChainId",localChainId)
-      console.log("👩‍💼 selected address:",address)
-      console.log("🕵🏻‍♂️ selectedChainId:",selectedChainId)
-      console.log("💵 yourLocalBalance",yourLocalBalance?formatEther(yourLocalBalance):"...")
-      console.log("💵 yourMainnetBalance",yourMainnetBalance?formatEther(yourMainnetBalance):"...")
-      console.log("📝 readContracts",readContracts)
-      console.log("🌍 DAI contract on mainnet:",mainnetDAIContract)
-      console.log("🔐 writeContracts",writeContracts)
+      console.log("🌎 mainnetProvider", mainnetProvider)
+      console.log("🏠 localChainId", localChainId)
+      console.log("👩‍💼 selected address:", address)
+      console.log("🕵🏻‍♂️ selectedChainId:", selectedChainId)
+      console.log("💵 yourLocalBalance", yourLocalBalance ? formatEther(yourLocalBalance) : "...")
+      console.log("💵 yourMainnetBalance", yourMainnetBalance ? formatEther(yourMainnetBalance) : "...")
+      console.log("📝 readContracts", readContracts)
+      console.log("🌍 DAI contract on mainnet:", mainnetDAIContract)
+      console.log("🔐 writeContracts", writeContracts)
     }
   }, [mainnetProvider, address, selectedChainId, yourLocalBalance, yourMainnetBalance, readContracts, writeContracts, mainnetDAIContract])
 
 
   let networkDisplay = ""
-  if(localChainId && selectedChainId && localChainId != selectedChainId ){
+  if (localChainId && selectedChainId && localChainId != selectedChainId) {
     networkDisplay = (
-      <div style={{zIndex:2, position:'absolute', right:0,top:60,padding:16}}>
+      <div style={{ zIndex: 2, position: 'absolute', right: 0, top: 60, padding: 16 }}>
         <Alert
           message={"⚠️ Wrong Network"}
           description={(
@@ -162,9 +162,9 @@ function App(props) {
         />
       </div>
     )
-  }else{
+  } else {
     networkDisplay = (
-      <div style={{zIndex:-1, position:'absolute', right:154,top:28,padding:16,color:targetNetwork.color}}>
+      <div style={{ zIndex: -1, position: 'absolute', right: 154, top: 28, padding: 16, color: targetNetwork.color }}>
         {targetNetwork.name}
       </div>
     )
@@ -197,21 +197,36 @@ function App(props) {
       {networkDisplay}
       <BrowserRouter>
 
-        <Menu style={{ textAlign:"center" }} selectedKeys={[route]} mode="horizontal">
+        <Menu style={{ textAlign: "center" }} selectedKeys={[route]} mode="horizontal">
           <Menu.Item key="/exampleui">
-            <Link onClick={()=>{setRoute("/marketplace")}} to="/marketplace">ExampleUI</Link>
+            <Link onClick={() => { setRoute("/home") }} to="/home">Home</Link>
           </Menu.Item>
-          <Menu.Item key="/mainnetdai">
-            <Link onClick={()=>{setRoute("/mainnetdai")}} to="/mainnetdai">Mainnet DAI</Link>
+          <Menu.Item key="/buy">
+            <Link onClick={() => { setRoute("/mainnetdai") }} to="/buy">Buy</Link>
           </Menu.Item>
-          <Menu.Item key="/subgraph">
-            <Link onClick={()=>{setRoute("/subgraph")}} to="/subgraph">Subgraph</Link>
+          <Menu.Item key="/sell">
+            <Link onClick={() => { setRoute("/subgraph") }} to="/sell">Sell</Link>
           </Menu.Item>
         </Menu>
 
         <Switch>
           <Route path="/home">
             <ExampleUI
+              address={address}
+              userProvider={userProvider}
+              mainnetProvider={mainnetProvider}
+              localProvider={localProvider}
+              yourLocalBalance={yourLocalBalance}
+              price={price}
+              tx={tx}
+              writeContracts={writeContracts}
+              readContracts={readContracts}
+              purpose={purpose}
+              setPurposeEvents={setPurposeEvents}
+            />
+          </Route>
+          <Route path="/details">
+            <Details
               address={address}
               userProvider={userProvider}
               mainnetProvider={mainnetProvider}
@@ -237,10 +252,10 @@ function App(props) {
           </Route>
           <Route path="/sell">
             <Subgraph
-            subgraphUri={props.subgraphUri}
-            tx={tx}
-            writeContracts={writeContracts}
-            mainnetProvider={mainnetProvider}
+              subgraphUri={props.subgraphUri}
+              tx={tx}
+              writeContracts={writeContracts}
+              mainnetProvider={mainnetProvider}
             />
           </Route>
         </Switch>
@@ -251,18 +266,18 @@ function App(props) {
 
       {/* 👨‍💼 Your account is in the top right with a wallet at connect options */}
       <div style={{ position: "fixed", textAlign: "right", right: 0, top: 0, padding: 10 }}>
-         <Account
-           address={address}
-           localProvider={localProvider}
-           userProvider={userProvider}
-           mainnetProvider={mainnetProvider}
-           price={price}
-           web3Modal={web3Modal}
-           loadWeb3Modal={loadWeb3Modal}
-           logoutOfWeb3Modal={logoutOfWeb3Modal}
-           blockExplorer={blockExplorer}
-         />
-         {faucetHint}
+        <Account
+          address={address}
+          localProvider={localProvider}
+          userProvider={userProvider}
+          mainnetProvider={mainnetProvider}
+          price={price}
+          web3Modal={web3Modal}
+          loadWeb3Modal={loadWeb3Modal}
+          logoutOfWeb3Modal={logoutOfWeb3Modal}
+          blockExplorer={blockExplorer}
+        />
+        {faucetHint}
       </div>
 
     </div>
@@ -293,18 +308,18 @@ const logoutOfWeb3Modal = async () => {
   }, 1);
 };
 
- window.ethereum && window.ethereum.on('chainChanged', chainId => {
+window.ethereum && window.ethereum.on('chainChanged', chainId => {
   web3Modal.cachedProvider &&
-  setTimeout(() => {
-    window.location.reload();
-  }, 1);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1);
 })
 
- window.ethereum && window.ethereum.on('accountsChanged', accounts => {
+window.ethereum && window.ethereum.on('accountsChanged', accounts => {
   web3Modal.cachedProvider &&
-  setTimeout(() => {
-    window.location.reload();
-  }, 1);
+    setTimeout(() => {
+      window.location.reload();
+    }, 1);
 })
 
 export default App;

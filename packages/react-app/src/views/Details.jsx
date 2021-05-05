@@ -6,7 +6,7 @@ import { SyncOutlined } from '@ant-design/icons';
 import { Address, Balance } from "../components";
 import { parseEther, formatEther } from "@ethersproject/units";
 
-export default function ExampleUI({purpose, setPurposeEvents, address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts }) {
+export default function Details({purpose, setPurposeEvents, address, mainnetProvider, userProvider, localProvider, yourLocalBalance, price, tx, readContracts, writeContracts }) {
 
   const [newPurpose, setNewPurpose] = useState("loading...");
 
@@ -15,7 +15,7 @@ export default function ExampleUI({purpose, setPurposeEvents, address, mainnetPr
       {/*
         ⚙️ Here is an example UI that displays and sets the purpose in your smart contract:
       */}
-      <div style={{border:"1px solid #cccccc", padding:16, width: window.innerWidth * 0.87, margin:"auto",marginTop:64}}>
+      <div style={{border:"1px solid #cccccc", padding:16, width:400, margin:"auto",marginTop:64}}>
         <h2>Example UI:</h2>
 
         <h4>purpose: {purpose}</h4>
