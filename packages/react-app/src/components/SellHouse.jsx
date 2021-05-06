@@ -1,41 +1,22 @@
-import React from "react";
-import { Card, Form, DatePicker, TimePicker, Button } from 'antd';
-const { RangePicker } = DatePicker;
+import React, { useState } from "react";
+import { Button } from "antd";
+import TextField from '@material-ui/core/TextField';
 
-const { Meta } = Card;
+export default function RealEstate(props) {
 
-export default function SellHouse(props) {
+    const [form, setForm] = useState({});
 
     return (
-        <Form name="time_related_controls">
-            <Form.Item name="date-picker" label="DatePicker">
-                <DatePicker />
-            </Form.Item>
-            <Form.Item name="date-time-picker" label="DatePicker[showTime]">
-                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-            </Form.Item>
-            <Form.Item name="month-picker" label="MonthPicker">
-                <DatePicker picker="month" />
-            </Form.Item>
-            <Form.Item name="range-picker" label="RangePicker">
-                <RangePicker />
-            </Form.Item>
-            <Form.Item name="range-time-picker" label="RangePicker[showTime]">
-                <RangePicker showTime format="YYYY-MM-DD HH:mm:ss" />
-            </Form.Item>
-            <Form.Item name="time-picker" label="TimePicker" {...config}>
-                <TimePicker />
-            </Form.Item>
-            <Form.Item
-                wrapperCol={{
-                    xs: { span: 24, offset: 0 },
-                    sm: { span: 16, offset: 8 },
-                }}
-            >
-                <Button type="primary" htmlType="submit">
-                    Submit
-          </Button>
-            </Form.Item>
-        </Form>
+        <div style={{ flexDirection: 'column', display: 'flex', alignItems: 'center', marginLeft: 170, width: window.innerWidth * 0.8 }}>
+            <TextField style={{ marginTop: 50, width: window.innerWidth * 0.8, }} required id="price-required" label="Price" color="#FFFFFF" onChange={(e) => setForm({ ...form, price: e.target.value })} />
+            <TextField style={{ marginTop: 50, width: window.innerWidth * 0.8 }} required id="address-required" label="Address" onChange={(e) => setForm({ ...form, address: e.target.value })} />
+            <TextField style={{ marginTop: 50, width: window.innerWidth * 0.8 }} required id="square-required" label="Square" onChange={(e) => setForm({ ...form, square: e.target.value })} />
+            <TextField style={{ marginTop: 50, width: window.innerWidth * 0.8 }} required id="description-required" label="Description" onChange={(e) => setForm({ ...form, description: e.target.value })} />
+            <TextField style={{ marginTop: 50, width: window.innerWidth * 0.8 }} required id="date-required" label="Date" onChange={(e) => setForm({ ...form, date: e.target.value })} />
+            <TextField style={{ marginTop: 50, width: window.innerWidth * 0.8 }} required id="nbRoom-required" label="Nombre de pièces" onChange={(e) => setForm({ ...form, nbRoom: e.target.value })} />
+            <Button style={{ marginTop: 100 }} variant="contained" color="primary" onClick={() => props.createEstate(parseInt(form.price), form.address, parseInt(form.square), form.description, parseInt(form.date), parseInt(form.nbRoom))}>
+                Vendre
+                </Button>
+        </div>
     );
 }

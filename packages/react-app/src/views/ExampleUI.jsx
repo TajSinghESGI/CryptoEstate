@@ -15,118 +15,50 @@ export default function ExampleUI({route, purpose, setPurposeEvents, address, ma
   
 
   const history = useHistory();
+  const [items, setItems] = useState([]);
 
-  const handleClick = (image, title, rooms, price) => {
-    console.log("Test");
+  const image = "https://www.villanovo.fr/photos/1550/marrakech-villa-rose-anna-3931620815d94b79d980d11.12320438.1920.jpg";
+
+  const handleClick = (image, title, rooms, price, addr, description, date, squareMeter, id ) => {
+    console.log("PRICE", price);
     history.push({
       pathname:"/details", 
       state: { 
         image: image, 
         title: title, 
         rooms: rooms, 
-        housePrice: price
+        price: price,
+        addr: addr,
+        description: description,
+        date,
+        squareMeter: squareMeter,
+        id: id,
       }
     })
   };
 
-  const items = [
-    {
-      id: 1,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "Villa",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 2,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "appart",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 3,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "Villa",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 4,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "appart",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 5,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "Villa",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 6,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "appart",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 7,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "Villa",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 8,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "appart",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 9,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "Villa",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 10,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "appart",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 11,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "Villa",
-      rooms: 4,
-      price: 1000
-    },
-    {
-      id: 12,
-      image: "https://www.myistria.com/UserDocsImages/app/objekti/795/slika_hd/19082020034916_Villas-near-Rovinj-Villa-Prestige-2.jpg?preset=carousel-1-webp",
-      title: "appart",
-      rooms: 4,
-      price: 1000
-    },
-  ];
-  
+  useEffect(() => {
+    if (readContracts != undefined)
+      readOneHouses();
+  }, [readContracts]);
+
+  async function readOneHouses() {
+    const connect = readContracts.YourContract.connect(userProvider.getSigner());
+    connect.getAllRealEstate();
+    setItems(await connect.getAllRealEstate());
+    console.log("HOUUUUUUUUSE", await connect.getAllRealEstate());
+  }
 
   return (
     <div>
       <div style={{ display: "flex", flexDirection: "row", marginLeft: 100, flexWrap: 'wrap'}}>
-        {items.map((item) => {
+        {items.map((item, index) => {
           return ( 
-          <div key={item.id} onClick={()=> {handleClick(item.image, item.title, item.rooms, item.price)}}>
+          <div key={item.id} onClick={()=> {handleClick(image, item.title, item.nbRoom._hex, item.price._hex, item.addr, item.description, item.date._hex, item.squareMeter._hex, index)}}>
             <HouseItem 
-              image={item.image}
-              title={item.title}
-              rooms={item.rooms}
+              image={image}
+              title={item.description}
+              rooms={item.nbRoom}
               price={item.price}
             />
           </div>

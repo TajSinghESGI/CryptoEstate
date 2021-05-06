@@ -189,24 +189,37 @@ function App(props) {
   let faucetHint = ""
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name == "localhost"
 
-  useEffect(() => {
-    console.log("TESSST");
-    if (readContracts != undefined)
-      readContractValue();
-  }, [readContracts]);
+  // useEffect(() => {
+  //   console.log("TESSST");
+  //   if (readContracts != undefined)
+  //     readContractValue();
+  // }, [readContracts]);
 
-  async function readContractValue() {
-    //const estates = await readContracts.YourContract._getAllRealEstate();
-    //if (await estates.length == 0) {
-      readContracts.YourContract.createEstate(10, "Paname", 40, "une description", 123456, 2);
-      readContracts.YourContract.createEstate(36, "Marseille", 90, "Desc", 123456, 45);
-   /*   console.log(await readContracts.YourContract._getAllRealEstate());
-    } else {
-      console.log("NOOOO");
-      console.log(await readContracts.YourContract._getAllRealEstate());*/
-      console.log(await readContracts.YourContract._getAllRealEstate());
+  // async function readContractValue() {
+  //   //const estates = await readContracts.YourContract._getAllRealEstate();
+  //   const connect = readContracts.YourContract.connect(userProvider.getSigner());
+  //   //if (await estates.length == 0) {
+  //     // connect.createEstate(10, "Paname", 40, "une description", 123456, 2);
+  //     // connect.createEstate(36, "Marseille", 90, "Desc", 123456, 45);
+  //     console.log(await connect.getAllRealEstate());
+  //  /*   console.log(await readContracts.YourContract._getAllRealEstate());
+  //   } else {
+  //     console.log("NOOOO");
+  //     console.log(await readContracts.YourContract._getAllRealEstate());*/
+  //     //console.log(await readContracts);
     
     
+  // }
+
+  async function createEstate(price, address, squareMeter, description, date, rooms) {
+    const connect = readContracts.YourContract.connect(userProvider.getSigner());
+    connect.createEstate(price, address,squareMeter, description, date, rooms);
+    console.log("TEST HOUSE", await readContracts.YourContract.getAllRealEstate());
+  }
+
+  async function buyHouse(id) {
+    const connect = readContracts.YourContract.connect(userProvider.getSigner());
+    connect.buyRealEstate(id);
   }
 
   return (
@@ -245,16 +258,10 @@ function App(props) {
               purpose={purpose}
               setPurposeEvents={setPurposeEvents}
             />
-            {/* <Contract
-              name="YourContract"
-              signer={userProvider.getSigner()}
-              provider={localProvider}
-              address={address}
-              blockExplorer={blockExplorer}
-            /> */}
           </Route>
           <Route path="/details">
             <Details
+              buyHouse={buyHouse}
               address={address}
               userProvider={userProvider}
               mainnetProvider={mainnetProvider}
@@ -269,21 +276,14 @@ function App(props) {
             />
           </Route>
           <Route path="/buy">
-            <Contract
-              name="DAI"
-              customContract={mainnetDAIContract}
-              signer={userProvider.getSigner()}
-              provider={mainnetProvider}
-              address={address}
-              blockExplorer={"https://etherscan.io/"}
-            />
+            <Hints 
+            createEstate={createEstate} />
           </Route>
           <Route path="/sell">
             <Subgraph
-              subgraphUri={props.subgraphUri}
-              tx={tx}
-              writeContracts={writeContracts}
-              mainnetProvider={mainnetProvider}
+              userProvider={userProvider}
+              readContracts={readContracts}
+              createEstate={createEstate}
             />
           </Route>
         </Switch>
