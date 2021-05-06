@@ -36,7 +36,7 @@ import { INFURA_ID, DAI_ADDRESS, DAI_ABI, NETWORK, NETWORKS } from "./constants"
 
 
 /// 📡 What chain are your contracts deployed to?
-const targetNetwork = NETWORKS['localhost']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
+const targetNetwork = NETWORKS['kovan']; // <------- select your target frontend network (localhost, rinkeby, xdai, mainnet)
 
 // 😬 Sorry for all the console logging
 const DEBUG = true
@@ -188,6 +188,26 @@ function App(props) {
 
   let faucetHint = ""
   const faucetAvailable = localProvider && localProvider.connection && targetNetwork.name == "localhost"
+
+  useEffect(() => {
+    console.log("TESSST");
+    if (readContracts != undefined)
+      readContractValue();
+  }, [readContracts]);
+
+  async function readContractValue() {
+    //const estates = await readContracts.YourContract._getAllRealEstate();
+    //if (await estates.length == 0) {
+      readContracts.YourContract.createEstate(10, "Paname", 40, "une description", 123456, 2);
+      readContracts.YourContract.createEstate(36, "Marseille", 90, "Desc", 123456, 45);
+   /*   console.log(await readContracts.YourContract._getAllRealEstate());
+    } else {
+      console.log("NOOOO");
+      console.log(await readContracts.YourContract._getAllRealEstate());*/
+      console.log(await readContracts.YourContract._getAllRealEstate());
+    
+    
+  }
 
   return (
     <div className="App">
