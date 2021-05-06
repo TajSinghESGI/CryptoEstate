@@ -202,16 +202,17 @@ function App(props) {
             <Link onClick={() => { setRoute("/home") }} to="/home">Home</Link>
           </Menu.Item>
           <Menu.Item key="/buy">
-            <Link onClick={() => { setRoute("/mainnetdai") }} to="/buy">Buy</Link>
+            <Link onClick={() => { setRoute("/buy") }} to="/buy">Buy</Link>
           </Menu.Item>
           <Menu.Item key="/sell">
-            <Link onClick={() => { setRoute("/subgraph") }} to="/sell">Sell</Link>
+            <Link onClick={() => { setRoute("/sell") }} to="/sell">Sell</Link>
           </Menu.Item>
         </Menu>
 
         <Switch>
           <Route path="/home">
             <ExampleUI
+              route={route}
               address={address}
               userProvider={userProvider}
               mainnetProvider={mainnetProvider}
@@ -224,6 +225,13 @@ function App(props) {
               purpose={purpose}
               setPurposeEvents={setPurposeEvents}
             />
+            {/* <Contract
+              name="YourContract"
+              signer={userProvider.getSigner()}
+              provider={localProvider}
+              address={address}
+              blockExplorer={blockExplorer}
+            /> */}
           </Route>
           <Route path="/details">
             <Details
