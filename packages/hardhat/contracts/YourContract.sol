@@ -33,7 +33,7 @@ contract YourContract {
         return true;
     }
     
-    function _buyRealEstate(uint _idRealEstate) payable external{ //msg.value
+    function buyRealEstate(uint _idRealEstate) payable external{ //msg.value
     
         require(realEstates[_idRealEstate].addrSeller != msg.sender);
         
@@ -47,8 +47,8 @@ contract YourContract {
 
     }
     
-    function _getAllRealEstateByAddrSeller() external view returns (Estate[] memory) {
-        uint sizeTabRealEstate = realEstates.length;
+    function getAllRealEstateByAddrSeller() external view returns (Estate[] memory) {
+        uint sizeTabRealEstate = realEstates.length + 1;
         Estate[] memory realEstatesBySeller = new Estate[](sizeTabRealEstate);
         uint i = 0;
         for (uint j = 0; j != sizeTabRealEstate - 1; j += 1) {  //for loop example
@@ -60,12 +60,12 @@ contract YourContract {
         return realEstatesBySeller;
     }
     
-    function _getRealEstateById(uint _idRealEstate) view external returns (Estate memory) {
+    function getRealEstateById(uint _idRealEstate) view external returns (Estate memory) {
         require(_idRealEstate < realEstates.length);
         return realEstates[_idRealEstate];
     }
     
-    function _getAllRealEstate() external view returns (Estate[] memory) {
+    function getAllRealEstate() external view returns (Estate[] memory) {
         return realEstates;
     }
 
